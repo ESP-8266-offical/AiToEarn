@@ -1,7 +1,7 @@
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
   "appId": "cn.aitoearn.pc",
-  "productName": "哎哟赚AiToEarn",
+  "productName": "羲梦科技AI矩阵推流工具",
   "asar": true,
   "asarUnpack": ["**/node_modules/sharp/**/*", "**/node_modules/@img/**/*"],
   "directories": {

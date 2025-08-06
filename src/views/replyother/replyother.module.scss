@@ -1,0 +1,161 @@
+.replyother {
+  // 瀑布流布局样式优化
+  .myMasonryGrid {
+    display: flex;
+    width: auto;
+    margin-left: -16px; // 列间距
+  }
+  
+  .myMasonryGridColumn {
+    padding-left: 16px; // 列间距
+    background-clip: padding-box;
+  }
+  
+  .masonryItem {
+    margin-bottom: 16px;
+    
+    :global {
+      .ant-card {
+        width: 320px;
+        background: var(--dark-bg-card) !important;
+        border: 1px solid var(--dark-border) !important;
+        
+        &:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5) !important;
+          border-color: var(--dark-border-hover) !important;
+        }
+        
+        .ant-card-cover {
+          overflow: hidden;
+          border-radius: 12px 12px 0 0;
+          
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            
+            &:hover {
+              transform: scale(1.05);
+            }
+          }
+          
+          // 图片加载失败时的替代样式
+          div {
+            background: var(--dark-bg-tertiary) !important;
+            color: var(--dark-text-primary) !important;
+            font-weight: 500;
+          }
+        }
+        
+        .ant-card-meta {
+          padding: 12px 0;
+          
+          .ant-card-meta-title {
+            color: var(--dark-text-primary) !important;
+            font-weight: 600;
+            margin-bottom: 8px;
+          }
+          
+          .ant-card-meta-description {
+            color: var(--dark-text-secondary) !important;
+            
+            .ant-typography {
+              color: var(--dark-text-primary) !important;
+              
+              &.ant-typography-secondary {
+                color: var(--dark-text-muted) !important;
+              }
+            }
+          }
+        }
+        
+        .ant-card-actions {
+          background: var(--dark-bg-tertiary) !important;
+          border-top: 1px solid var(--dark-border) !important;
+          
+          .ant-space {
+            color: var(--dark-text-muted);
+            transition: color 0.3s ease;
+            
+            &:hover {
+              color: var(--primary-color);
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  // 加载更多区域样式
+  .loadMoreArea {
+    width: 100%;
+    padding: 16px 0;
+    min-height: 60px;
+  }
+  
+  .loadingMore {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--dark-text-muted);
+    font-size: 14px;
+  }
+  
+  .noMoreData {
+    color: var(--dark-text-muted);
+    font-size: 14px;
+    text-align: center;
+    
+    :global {
+      .ant-divider {
+        color: var(--dark-text-muted);
+        font-size: 14px;
+        border-color: var(--dark-border);
+      }
+    }
+  }
+  
+  // 评论区样式优化
+  .customCommentsSection {
+    background-color: var(--dark-bg-tertiary);
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+  }
+  
+  .commentsList {
+    max-height: 150px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+    
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: var(--dark-bg-tertiary);
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--dark-border);
+      border-radius: 3px;
+    }
+  }
+  
+  .commentItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+    background-color: var(--dark-bg-secondary);
+    border-radius: 4px;
+    margin-bottom: 8px;
+    color: var(--dark-text-primary);
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

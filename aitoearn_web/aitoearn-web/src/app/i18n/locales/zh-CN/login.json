@@ -1,5 +1,5 @@
 {
-  "welcomeBack": "哎呦赚",
+  "welcomeBack": "羲梦科技AI矩阵推流工具",
   "emailPlaceholder": "邮箱",
   "passwordPlaceholder": "密码",
   "login": "登录/注册",
@@ -21,4 +21,4 @@
   "checkStatusError": "检查注册状态失败",
   "registerError": "注册失败，请稍后重试",
   "googleLoginFailed": "Google 登录失败"
-} 
+}

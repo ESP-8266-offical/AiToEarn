@@ -1,5 +1,5 @@
 {
-  "welcomeBack": "AiToEarn",
+  "welcomeBack": "XiMeng Tech AI Matrix Streaming Tool",
   "emailPlaceholder": "Email",
   "passwordPlaceholder": "Password",
   "login": "Login",
@@ -21,4 +21,4 @@
   "checkStatusError": "Failed to check registration status",
   "registerError": "Registration failed, please try again later",
   "googleLoginFailed": "Google login failed"
-} 
+}

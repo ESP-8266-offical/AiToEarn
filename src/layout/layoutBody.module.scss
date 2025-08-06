@@ -37,19 +37,20 @@
   }
 }
 
-/* 鼠标跟随光效的JavaScript支持 */
+/* 鼠标跟随光效的JavaScript支持 - 优化响应速度 */
 :global(.mouse-light-effect) {
   position: fixed;
-  width: 300px;
-  height: 300px;
+  width: 250px;
+  height: 250px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(135, 107, 228, 0.12) 0%, rgba(166, 106, 228, 0.08) 30%, transparent 70%);
-  filter: blur(30px);
+  background: radial-gradient(circle, rgba(135, 107, 228, 0.15) 0%, rgba(166, 106, 228, 0.08) 25%, transparent 60%);
+  filter: blur(25px);
   pointer-events: none;
   z-index: 1;
-  transition: all 0.2s ease;
+  transition: opacity 0.1s ease, transform 0.05s ease;
   transform: translate(-50%, -50%);
   opacity: 0;
+  will-change: transform, opacity;
 }
 
 :global(.mouse-light-effect.active) {

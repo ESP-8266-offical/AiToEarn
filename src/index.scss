@@ -11,8 +11,8 @@
   --dark-border: rgba(255, 255, 255, 0.1);
   --dark-border-hover: rgba(255, 255, 255, 0.2);
   --dark-text-primary: #ffffff;
-  --dark-text-secondary: #e6e6e6;
-  --dark-text-muted: rgba(255, 255, 255, 0.6);
+  --dark-text-secondary: #ffffff;
+  --dark-text-muted: #ffffff;
   --primary-color: #876be4;
   --primary-color-hover: #a66ae4;
   --gradient-primary: linear-gradient(135deg, #876be4 0%, #a66ae4 100%);
@@ -71,7 +71,7 @@ html, body, #root {
   background: var(--dark-bg-card) !important;
   border: 1px solid var(--dark-border) !important;
   border-radius: 12px !important;
-  backdrop-filter: blur(20px) !important;
+  backdrop-filter: blur(40px) !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
   transition: all 0.3s ease !important;
   position: relative !important;
@@ -315,7 +315,7 @@ html, body, #root {
   .ant-modal-content {
     background: var(--dark-bg-card) !important;
     border-radius: 12px !important;
-    backdrop-filter: blur(20px) !important;
+    backdrop-filter: blur(40px) !important;
     
     .ant-modal-header {
       background: transparent !important;

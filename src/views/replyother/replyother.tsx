@@ -35,6 +35,7 @@ import {
 import { useCallback, useRef, useState, useEffect } from 'react';
 import AccountSidebar from '../account/components/AccountSidebar/AccountSidebar';
 import styles from './reply.module.scss';
+import replyOtherStyles from './replyother.module.scss';
 import ReplyWorks, { ReplyWorksRef } from './components/replyWorks';
 import ReplyComment, { ReplyCommentRef } from './components/replyComment';
 import AddAutoRun, { AddAutoRunRef } from './components/addAutoRun';
@@ -1007,13 +1008,13 @@ export default function Page() {
 
                         <Masonry
                           breakpointCols={breakpointColumnsObj}
-                          className={styles.myMasonryGrid}
-                          columnClassName={styles.myMasonryGridColumn}
+                          className={`${styles.myMasonryGrid} ${replyOtherStyles.myMasonryGrid}`}
+                          columnClassName={`${styles.myMasonryGridColumn} ${replyOtherStyles.myMasonryGridColumn}`}
                         >
                           {postList.map((item: any, index: number) => (
                             <List.Item
                               key={`${item.dataId || item.coverUrl}-${index}`}
-                              className={styles.masonryItem}
+                              className={`${styles.masonryItem} ${replyOtherStyles.masonryItem}`}
                               onClick={() => {
                                 if (isSelectMode) {
                                   handlePostSelect(item.dataId);
@@ -1030,7 +1031,7 @@ export default function Page() {
                             >
                               <Card
                                 hoverable={isSelectMode}
-                                className={styles.postCard}
+                                className={`${styles.postCard} ${replyOtherStyles.replyother}`}
                                 cover={
                                   <div
                                     style={{
@@ -1088,10 +1089,12 @@ export default function Page() {
                                             display: flex;
                                             align-items: center;
                                             justify-content: center;
-                                            background: #f5f5f5;
+                                            background: var(--dark-bg-tertiary);
+                                            color: var(--dark-text-primary);
                                             padding: 10px;
                                             text-align: center;
                                             word-break: break-word;
+                                            font-weight: 500;
                                           `;
                                           titleDiv.textContent = item.title;
                                           target.parentNode?.appendChild(
@@ -1161,11 +1164,18 @@ export default function Page() {
                                       <Text
                                         strong
                                         ellipsis
-                                        style={{ display: 'block' }}
+                                        style={{ 
+                                          display: 'block',
+                                          color: 'var(--dark-text-primary)'
+                                        }}
                                       >
                                         {item.title}
                                       </Text>
-                                      <Text type="secondary" ellipsis>
+                                      <Text 
+                                        type="secondary" 
+                                        ellipsis
+                                        style={{ color: 'var(--dark-text-muted)' }}
+                                      >
                                         {item.content}
                                       </Text>
                                     </div>
@@ -1177,16 +1187,16 @@ export default function Page() {
                         </Masonry>
 
                         {/* 加载更多区域 */}
-                        <div ref={loadMoreRef} className={styles.loadMoreArea}>
+                        <div ref={loadMoreRef} className={`${styles.loadMoreArea} ${replyOtherStyles.loadMoreArea}`}>
                           {isLoadingMore && (
-                            <div className={styles.loadingMore}>
+                            <div className={`${styles.loadingMore} ${replyOtherStyles.loadingMore}`}>
                               <Spin size="small" />
                               <span style={{ marginLeft: 8 }}>加载中...</span>
                             </div>
                           )}
 
                           {!pageInfo.hasMore && postList.length > 0 && (
-                            <div className={styles.noMoreData}>
+                            <div className={`${styles.noMoreData} ${replyOtherStyles.noMoreData}`}>
                               <Divider plain>没有更多数据了</Divider>
                             </div>
                           )}
@@ -1895,9 +1905,9 @@ export default function Page() {
       {/* 任务下发弹窗 */}
       <Modal
         title={
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <SettingOutlined style={{ marginRight: 8 }} />
-            <span>任务下发设置</span>
+          <div style={{ display: 'flex', alignItems: 'center', color: '#ffffff' }}>
+            <SettingOutlined style={{ marginRight: 8, color: '#ffffff' }} />
+            <span style={{ color: '#ffffff' }}>任务下发设置</span>
           </div>
         }
         open={taskModalVisible}
@@ -1919,7 +1929,7 @@ export default function Page() {
           }}
         >
           {/* 点赞概率 */}
-          <Form.Item label="点赞概率" name="likeProb">
+          <Form.Item label={<span style={{ color: '#ffffff' }}>点赞概率</span>} name="likeProb">
             <Slider
               marks={{
                 0: '0%',
@@ -1931,10 +1941,10 @@ export default function Page() {
             />
           </Form.Item>
 
-          <Divider orientation="left">评论设置</Divider>
+          <Divider orientation="left" style={{ color: '#ffffff' }}>评论设置</Divider>
 
           {/* 评论概率 */}
-          <Form.Item label="评论概率" name="commentProb">
+          <Form.Item label={<span style={{ color: '#ffffff' }}>评论概率</span>} name="commentProb">
             <Slider
               marks={{
                 0: '0%',
@@ -1949,21 +1959,21 @@ export default function Page() {
           {/* 评论类型 */}
           <Row gutter={24}>
             <Col span={12}>
-              <Form.Item label="评论类型" name="commentType">
+              <Form.Item label={<span style={{ color: '#ffffff' }}>评论类型</span>} name="commentType">
                 <Radio.Group onChange={(e) => setCommentType(e.target.value)}>
                 <Tooltip title="使用自定义评论">
-                    <Radio.Button value="custom">
-                      <UserOutlined /> 自定义评论
+                    <Radio.Button value="custom" style={{ color: '#ffffff' }}>
+                      <UserOutlined style={{ color: '#ffffff' }} /> 自定义评论
                     </Radio.Button>
                   </Tooltip>
                   <Tooltip title="使用AI生成评论">
-                    <Radio.Button value="ai">
-                      <RobotOutlined /> Deepseek评论
+                    <Radio.Button value="ai" style={{ color: '#ffffff' }}>
+                      <RobotOutlined style={{ color: '#ffffff' }} /> Deepseek评论
                     </Radio.Button>
                   </Tooltip>
                   <Tooltip title="复制当前内容下热门评论">
-                    <Radio.Button value="copy">
-                      <CopyOutlined /> 评论复刻
+                    <Radio.Button value="copy" style={{ color: '#ffffff' }}>
+                      <CopyOutlined style={{ color: '#ffffff' }} /> 评论复刻
                     </Radio.Button>
                   </Tooltip>
                   
@@ -1978,12 +1988,13 @@ export default function Page() {
               <div className={styles.commentsList}>
                 {customComments.map((comment, index) => (
                   <div key={index} className={styles.commentItem}>
-                    <span>{comment}</span>
+                    <span style={{ color: '#ffffff' }}>{comment}</span>
                     <Button
                       type="text"
                       danger
                       size="small"
                       onClick={() => removeCustomComment(index, 'comment')}
+                      style={{ color: '#ffffff' }}
                     >
                       删除
                     </Button>
@@ -1994,7 +2005,7 @@ export default function Page() {
               <Row gutter={8}>
                 <Col flex="auto">
                   <Form.Item name="newComment">
-                    <Input placeholder="添加自定义评论" />
+                    <Input placeholder="添加自定义评论" style={{ color: '#ffffff' }} />
                   </Form.Item>
                 </Col>
                 <Col>
@@ -2015,7 +2026,7 @@ export default function Page() {
           )}
 
           {/* 收藏概率 */}
-          <Form.Item label="收藏概率" name="collectProb">
+          <Form.Item label={<span style={{ color: '#ffffff' }}>收藏概率</span>} name="collectProb">
             <Slider
               marks={{
                 0: '0%',
@@ -2031,12 +2042,12 @@ export default function Page() {
           <Form.Item style={{ marginTop: 20, textAlign: 'right' }}>
             <Button
               onClick={() => setTaskModalVisible(false)}
-              style={{ marginRight: 8 }}
+              style={{ marginRight: 8, color: '#ffffff' }}
             >
               取消
             </Button>
-            <Button type="primary" htmlType="submit" icon={<SendOutlined />}>
-              下发任务
+            <Button type="primary" htmlType="submit" icon={<SendOutlined style={{ color: '#ffffff' }} />}>
+              <span style={{ color: '#ffffff' }}>下发任务</span>
             </Button>
           </Form.Item>
         </Form>
@@ -2054,12 +2065,12 @@ export default function Page() {
               }}
             >
               <Avatar src={`${currentPost?.author?.avatar}`} />
-              <Text strong style={{ marginLeft: 10 }}>
+              <Text strong style={{ marginLeft: 10, color: '#ffffff' }}>
                 {currentPost?.author?.name}
               </Text>
             </div>
             <Text
-              style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: 20 }}
+              style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: 20, color: '#ffffff' }}
             >
               {currentPost?.title}
             </Text>
@@ -2081,6 +2092,7 @@ export default function Page() {
                     type="text"
                     size="small"
                     onClick={() => openReplyComment(comment)}
+                    style={{ color: '#ffffff' }}
                   >
                     回复
                   </Button>,
@@ -2091,6 +2103,7 @@ export default function Page() {
                         size="small"
                         loading={comment.isLoadingSubComments}
                         onClick={() => loadSubComments(comment)}
+                        style={{ color: '#ffffff' }}
                       >
                         查看{comment.data.sub_comment_count}条回复
                       </Button>
@@ -2099,8 +2112,8 @@ export default function Page() {
               >
                 <List.Item.Meta
                   avatar={<Avatar src={comment.headUrl} />}
-                  title={comment.nikeName}
-                  description={comment.content}
+                  title={<span style={{ color: '#ffffff' }}>{comment.nikeName}</span>}
+                  description={<span style={{ color: '#ffffff' }}>{comment.content}</span>}
                 />
 
                 {/* 二级评论列表 */}
@@ -2119,11 +2132,11 @@ export default function Page() {
                               }
                               title={
                                 <Space>
-                                  <span>{subComment.nikeName}</span>
+                                  <span style={{ color: '#ffffff' }}>{subComment.nikeName}</span>
                                   <span
                                     onClick={() => openReplyComment(subComment)}
                                     style={{
-                                      color: '#999',
+                                      color: '#ffffff',
                                       fontSize: '10px',
                                       cursor: 'pointer',
                                     }}
@@ -2133,10 +2146,12 @@ export default function Page() {
                                 </Space>
                               }
                               description={
-                                subComment.content +
-                                ' @ ' +
-                                subComment.data.target_comment?.user_info
-                                  .nickname
+                                <span style={{ color: '#ffffff' }}>
+                                  {subComment.content +
+                                  ' @ ' +
+                                  subComment.data.target_comment?.user_info
+                                    .nickname}
+                                </span>
                               }
                             />
                           </List.Item>
@@ -2150,6 +2165,7 @@ export default function Page() {
                           type="link" 
                           size="small"
                           onClick={() => getSecondCommentList(comment)}
+                          style={{ color: '#ffffff' }}
                         >
                           加载更多回复
                         </Button>

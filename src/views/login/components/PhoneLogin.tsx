@@ -53,7 +53,7 @@ const PhoneLogin = memo(
     return (
       <div className={styles.phoneLogin}>
         <div className={styles.loginHeader}>
-          <h2>欢迎来到哎哟赚</h2>
+          <h2>欢迎来到羲梦科技AI矩阵推流工具</h2>
           <p>请使用手机号登录</p>
         </div>
         <Form

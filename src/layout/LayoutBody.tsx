@@ -58,20 +58,51 @@ const LayoutBody = () => {
     };
   }, []);
 
-  // 鼠标跟随光效
+  // 鼠标跟随光效 - 优化版本
   useEffect(() => {
     const lightElement = document.createElement('div');
     lightElement.className = 'mouse-light-effect';
     document.body.appendChild(lightElement);
 
+    let currentX = 0;
+    let currentY = 0;
+    let targetX = 0;
+    let targetY = 0;
+    let animationId: number;
+    let isActive = false;
+
+    // 使用requestAnimationFrame实现更流畅的动画
+    const animate = () => {
+      // 使用更小的缓动系数实现更快的响应
+      const easing = 0.15;
+      currentX += (targetX - currentX) * easing;
+      currentY += (targetY - currentY) * easing;
+      
+      lightElement.style.left = currentX + 'px';
+      lightElement.style.top = currentY + 'px';
+      
+      animationId = requestAnimationFrame(animate);
+    };
+
     const handleMouseMove = (e: MouseEvent) => {
-      lightElement.style.left = e.clientX + 'px';
-      lightElement.style.top = e.clientY + 'px';
-      lightElement.classList.add('active');
+      targetX = e.clientX;
+      targetY = e.clientY;
+      
+      if (!isActive) {
+        isActive = true;
+        lightElement.classList.add('active');
+        currentX = targetX;
+        currentY = targetY;
+        animate();
+      }
     };
 
     const handleMouseLeave = () => {
+      isActive = false;
       lightElement.classList.remove('active');
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
     };
 
     document.addEventListener('mousemove', handleMouseMove);
@@ -80,6 +111,9 @@ const LayoutBody = () => {
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
       if (document.body.contains(lightElement)) {
         document.body.removeChild(lightElement);
       }
