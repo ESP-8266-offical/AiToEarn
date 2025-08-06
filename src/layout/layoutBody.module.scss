@@ -2,12 +2,56 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
+  background: var(--dark-bg-primary);
+  background-image: var(--gradient-bg);
+  color: var(--dark-text-primary);
+  
   :global {
-
     .layoutBody-main {
       height: 100%;
       overflow: auto;
       box-sizing: border-box;
+      background: transparent;
+      
+      /* 添加跟随鼠标的高斯模糊渐变光效 */
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: fixed;
+        width: 400px;
+        height: 400px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(135, 107, 228, 0.15) 0%, transparent 70%);
+        filter: blur(40px);
+        pointer-events: none;
+        z-index: 1;
+        transition: all 0.3s ease;
+        opacity: 0;
+      }
+      
+      &:hover::before {
+        opacity: 1;
+      }
     }
   }
+}
+
+/* 鼠标跟随光效的JavaScript支持 */
+:global(.mouse-light-effect) {
+  position: fixed;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(135, 107, 228, 0.12) 0%, rgba(166, 106, 228, 0.08) 30%, transparent 70%);
+  filter: blur(30px);
+  pointer-events: none;
+  z-index: 1;
+  transition: all 0.2s ease;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+:global(.mouse-light-effect.active) {
+  opacity: 1;
 }

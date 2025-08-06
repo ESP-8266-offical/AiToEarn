@@ -1,0 +1,232 @@
+/*
+ * @Author: Copilot
+ * @Date: 2025-01-01 00:00:00
+ * @Description: AI评论管理页面样式 - 暗黑主题
+ */
+
+.ai-comment-manager {
+  min-height: 100vh;
+  background: #0a0a0a;
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.2) 0%, transparent 50%);
+
+  /* 卡片样式 */
+  :global(.ant-card) {
+    background: rgba(20, 20, 25, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    &:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  :global(.ant-card-head) {
+    background: transparent;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    :global(.ant-card-head-title) {
+      color: #ffffff;
+      font-weight: 600;
+    }
+  }
+
+  :global(.ant-card-body) {
+    background: transparent;
+  }
+
+  /* 表单样式 */
+  :global(.ant-form-item-label > label) {
+    color: #e6e6e6;
+    font-weight: 500;
+  }
+
+  :global(.ant-input),
+  :global(.ant-input-number) {
+    background: rgba(40, 40, 50, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: #ffffff;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: rgba(135, 107, 228, 0.6);
+      background: rgba(45, 45, 55, 0.9);
+    }
+
+    &:focus {
+      border-color: #876be4;
+      box-shadow: 0 0 0 2px rgba(135, 107, 228, 0.2);
+      background: rgba(50, 50, 60, 0.9);
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+  }
+
+  /* 按钮样式 */
+  :global(.ant-btn-primary) {
+    background: linear-gradient(135deg, #876be4 0%, #a66ae4 100%);
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(135, 107, 228, 0.3);
+    transition: all 0.3s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 24px rgba(135, 107, 228, 0.4);
+      background: linear-gradient(135deg, #9d7ce8 0%, #b57ae8 100%);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  :global(.ant-btn-default) {
+    background: rgba(60, 60, 70, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #e6e6e6;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(70, 70, 80, 0.9);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+  }
+
+  /* 进度条样式 */
+  :global(.ant-progress-bg) {
+    background: linear-gradient(90deg, #876be4 0%, #a66ae4 100%);
+  }
+
+  :global(.ant-progress-success-bg) {
+    background: linear-gradient(90deg, #52c41a 0%, #73d13d 100%);
+  }
+
+  /* 文字样式 */
+  :global(.ant-typography) {
+    color: #ffffff;
+  }
+
+  :global(.ant-typography-caption) {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  /* 结果内容样式 */
+  .result-content {
+    background: rgba(30, 30, 40, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 16px;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(135, 107, 228, 0.1) 0%, transparent 50%);
+      pointer-events: none;
+    }
+  }
+
+  /* 鼠标跟随光效 */
+  :global(.ant-card) {
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0;
+      background: radial-gradient(circle 150px at var(--mouse-x, 0px) var(--mouse-y, 0px), 
+        rgba(135, 107, 228, 0.15) 0%, 
+        rgba(135, 107, 228, 0.05) 40%, 
+        transparent 70%);
+      transition: opacity 0.3s ease;
+      pointer-events: none;
+      filter: blur(1px);
+    }
+
+    &:hover::after {
+      opacity: 1;
+    }
+  }
+
+  /* 分割线样式 */
+  :global(.ant-divider) {
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* 提示文字样式 */
+  :global(.ant-typography-caption) {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* 表单验证错误样式 */
+  :global(.ant-form-item-has-error) {
+    :global(.ant-input) {
+      border-color: #ff4d4f;
+      box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.2);
+    }
+  }
+
+  /* 加载状态样式 */
+  :global(.ant-spin-dot-item) {
+    background-color: #876be4;
+  }
+
+  /* 工具提示样式 */
+  :global(.ant-tooltip) {
+    :global(.ant-tooltip-inner) {
+      background: rgba(20, 20, 25, 0.95);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+    }
+
+    :global(.ant-tooltip-arrow::before) {
+      background: rgba(20, 20, 25, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  .ai-comment-manager {
+    :global(.ant-card) {
+      margin: 12px;
+      border-radius: 8px;
+    }
+  }
+}

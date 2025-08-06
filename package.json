@@ -20,6 +20,7 @@
     "dev": "chcp 65001 && vite",
     "dev:mac": "vite",
     "build": "tsc && vite build && electron-builder",
+    "build:nosign": "tsc && vite build && electron-builder --config.win.forceCodeSigning=false",
     "build:notsc": "vite build && electron-builder",
     "preview": "vite preview",
     "pretest": "vite build --mode=test",

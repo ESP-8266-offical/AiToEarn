@@ -23,10 +23,10 @@ import {
 } from '@ant-design/icons';
 
 // 组件
-import { LayoutBody } from '@/layout/LayoutBody';
+import LayoutBody from '@/layout/LayoutBody';
 
 // 页面组件
-import Login from '@/views/login';
+// import Login from '@/views/login'; // 移除登录页面
 import Trending from '@/views/trending';
 import Account from '@/views/account';
 import Publish from '@/views/publish/page';
@@ -44,8 +44,9 @@ import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary';
 import AiTool from '@/views/aiTool/index';
 import AiRanking from '../views/aiTool/children/aiRanking/index';
 import AiToolWebview from '../views/aiTool/children/aiToolWebview';
+import AiCommentManager from '../views/aiTool/children/aiCommentManager/AiCommentManager';
 import ExpectedIncome from '@/views/finance/expectedIncome';
-import Test from '@/views/test';
+// import Test from '@/views/test'; // 移除测试页面
 import UserProfile from '@/views/user/mine/UserProfile';
 // import Test from '@/views/test';
 
@@ -125,6 +126,10 @@ export const router: CustomRouteObject[] = [
             element: <AiRanking />,
           },
           {
+            path: '/aiTool/aiCommentManager',
+            element: <AiCommentManager />,
+          },
+          {
             path: '/aiTool/aiToolWebview',
             element: <AiToolWebview />,
           },
@@ -178,7 +183,8 @@ export const router: CustomRouteObject[] = [
       // },
     ],
   },
-  { path: '/login', element: <Login /> },
+  // 移除登录路由，实现免登录
+  // { path: '/login', element: <Login /> },
 ];
 
 export default createHashRouter(router);

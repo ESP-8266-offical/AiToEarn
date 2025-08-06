@@ -1,4 +1,4 @@
-import { useEffect, useState, forwardRef, useImperativeHandle } from 'react';
+import { useState, forwardRef, useImperativeHandle } from 'react';
 import { signInApi, SignInType } from '@/api/signIn';
 import { Button, Progress, message } from 'antd';
 import { CheckCircleFilled, ClockCircleOutlined } from '@ant-design/icons';
@@ -8,7 +8,6 @@ import { useNavigate } from 'react-router-dom';
 
 const SignInCard = forwardRef((props, ref) => {
   const [loading, setLoading] = useState(false);
-  const [signInList, setSignInList] = useState<any[]>([]);
   const [thisWeekSigned, setThisWeekSigned] = useState(false);
   const [continueWeeks, setContinueWeeks] = useState(0);
 
@@ -20,14 +19,14 @@ const SignInCard = forwardRef((props, ref) => {
     try {
       const res = await signInApi.getSignInList({ type: SignInType.PUL_VIDEO });
       const list = res?.items || [];
-      console.log('dak',list)
-      setSignInList(list);
+      console.log('dak', list);
 
       // 计算本周是否已打卡和连续周数
       const now = new Date();
       const getWeek = (date: Date) => {
         const firstDay = new Date(date.getFullYear(), 0, 1);
-        const dayOfYear = Math.floor((date.getTime() - firstDay.getTime()) / 86400000) + 1;
+        const dayOfYear =
+          Math.floor((date.getTime() - firstDay.getTime()) / 86400000) + 1;
         return Math.ceil(dayOfYear / 7);
       };
       const thisYear = now.getFullYear();
@@ -36,14 +35,19 @@ const SignInCard = forwardRef((props, ref) => {
       let signed = false;
       let maxContinue = 0;
       let curContinue = 0;
-      let lastYear = thisYear, lastWeek = thisWeek;
+      let lastYear = thisYear,
+        lastWeek = thisWeek;
 
       for (const item of list) {
         const d = new Date(item.createTime);
         const y = d.getFullYear();
         const w = getWeek(d);
         if (y === thisYear && w === thisWeek) signed = true;
-        if ((y === lastYear && w === lastWeek) || (y === lastYear && w === lastWeek - 1) || (y === lastYear - 1 && lastWeek === 1 && w === 52)) {
+        if (
+          (y === lastYear && w === lastWeek) ||
+          (y === lastYear && w === lastWeek - 1) ||
+          (y === lastYear - 1 && lastWeek === 1 && w === 52)
+        ) {
           curContinue++;
           lastYear = y;
           lastWeek = w - 1;
@@ -54,7 +58,7 @@ const SignInCard = forwardRef((props, ref) => {
       maxContinue = curContinue;
       setThisWeekSigned(signed);
       setContinueWeeks(maxContinue);
-    } catch (e) {
+    } catch {
       message.error('获取打卡信息失败');
     }
     setLoading(false);
@@ -70,10 +74,8 @@ const SignInCard = forwardRef((props, ref) => {
 
   // 打卡
   const handleSignIn = async () => {
-     
-     navigate('/publish');
-
-    return
+    navigate('/publish');
+    return;
 
     setLoading(true);
     try {
@@ -92,33 +94,60 @@ const SignInCard = forwardRef((props, ref) => {
   return (
     <div className={styles.signInCard}>
       <div className={styles.icon}>
-        <img 
-          src={treeSvg} 
-          alt="tree" 
+        <img
+          src={treeSvg}
+          alt="tree"
           style={{
-            width: 48, 
+            width: 48,
             filter: thisWeekSigned ? 'none' : 'grayscale(100%)',
-            opacity: thisWeekSigned ? 1 : 0.6
-          }} 
+            opacity: thisWeekSigned ? 1 : 0.6,
+          }}
         />
       </div>
       <div className={styles.title}>每周使用一键发布视频即可为小树苗浇水</div>
       <div className={styles.status}>
         {thisWeekSigned ? (
           <div className={styles.signed}>
-            <CheckCircleFilled style={{ color: '#52c41a', marginRight: 4 }} /> 本周已完成浇水
+            <CheckCircleFilled style={{ color: '#52c41a', marginRight: 4 }} />
+            本周已完成浇水
           </div>
         ) : (
           <div className={styles.notSigned}>
-            <ClockCircleOutlined style={{ color: '#aaa', marginRight: 4 }} /> 本周待浇水
-            <div style={{ color: 'red', marginTop: 4, fontSize: 13 }}>如果未浇水，小树苗就会枯死</div>
+            <ClockCircleOutlined
+              style={{ color: 'rgba(255, 255, 255, 0.6)', marginRight: 4 }}
+            />
+            本周待浇水
+            <div
+              style={{
+                color: '#ff4d4f',
+                marginTop: 4,
+                fontSize: 13,
+                fontWeight: 500,
+              }}
+            >
+              如果未浇水，小树苗就会枯死
+            </div>
           </div>
         )}
       </div>
       <div className={styles.progress}>
         <span>连续浇水进度</span>
-        <span style={{ float: 'right' }}>{continueWeeks}/{totalWeeks}周</span>
-        <Progress percent={Math.round((continueWeeks / totalWeeks) * 100)} showInfo={false} style={{ margin: '4px 0' }} />
+        <span style={{ float: 'right' }}>
+          {continueWeeks}/{totalWeeks}周
+        </span>
+        <Progress
+          percent={Math.round((continueWeeks / totalWeeks) * 100)}
+          showInfo={false}
+          style={{
+            margin: '8px 0 4px',
+          }}
+          strokeColor={{
+            '0%': '#876be4',
+            '100%': '#a66ae4',
+          }}
+          trailColor="rgba(255, 255, 255, 0.1)"
+          strokeWidth={8}
+        />
       </div>
       <div className={styles.desc}>
         你已连续浇水 <b>{continueWeeks}</b> 周<br />
@@ -138,4 +167,4 @@ const SignInCard = forwardRef((props, ref) => {
   );
 });
 
-export default SignInCard; 
+export default SignInCard;

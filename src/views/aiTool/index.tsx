@@ -10,6 +10,7 @@ import NarratoAI from '@/assets/svgs/aiTool/narratoAI.svg?react';
 import Icon from '@ant-design/icons';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { CommentOutlined } from '@ant-design/icons';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -18,6 +19,11 @@ const items: MenuItem[] = [
     key: '/aiTool/aiRanking',
     label: 'AI工具排行榜',
     icon: <Icon component={Ranking} />,
+  },
+  {
+    key: '/aiTool/aiCommentManager',
+    label: 'AI评论管理',
+    icon: <CommentOutlined style={{ color: '#876be4' }} />,
   },
   {
     key: `/aiTool/aiToolWebview?webviewUrl=${encodeURIComponent('https://www.yikart.cn/chat?isHideNav=true&mask=100005#new-chat?mask=100005')}`,

@@ -220,4 +220,36 @@ export class AiToolsController {
     const res = await this.aiToolsService.getJmImgTaskRes(id)
     return res
   }
+  
+  @ApiOperation({
+    summary: 'AI评论管理 - 支持自定义提示词',
+    description: '新的AI评论功能，支持自定义提示词和进度追踪',
+  })
+  @ApiResponse({
+    description: '返回任务ID',
+    type: String,
+  })
+  @Post('comment/advanced')
+  async aiCommentAdvanced(@Body() body: {
+    content: string
+    customPrompt?: string
+    title?: string
+    desc?: string
+    max?: number
+  }) {
+    return this.aiToolsService.aiCommentWithProgress(body)
+  }
+
+  @ApiOperation({
+    summary: '获取AI评论生成进度',
+    description: '根据任务ID获取AI评论生成进度和结果',
+  })
+  @ApiResponse({
+    description: '进度信息',
+    type: Object,
+  })
+  @Get('comment/progress/:taskId')
+  async getAiCommentProgress(@Param('taskId') taskId: string) {
+    return this.aiToolsService.getAiCommentProgress(taskId)
+  }
 }

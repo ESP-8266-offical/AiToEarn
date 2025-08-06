@@ -29,12 +29,44 @@ export enum FireflycardTempTypes {
 @Injectable()
 export class AiToolsService {
   openai: OpenAI
+  private newApiKey: string
+  private newApiBaseUrl: string
 
   constructor(private readonly redisService: RedisService) {
     this.openai = new OpenAI({
-      apiKey: config.ai.qwenKey,
+      apiKey: config.ai?.qwenKey || '',
       baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
     })
+    
+    // 新API配置
+    this.newApiKey = process.env.NEW_AI_API_KEY || 'your-api-key'
+    this.newApiBaseUrl = process.env.NEW_AI_API_BASE_URL || 'https://api.gpt.ge'
+  }
+
+  /**
+   * 使用新API的通用聊天接口
+   */
+  private async newChatCompletion(messages: any[], model = 'gpt-4o', temperature = 0.5, maxTokens = 1688) {
+    try {
+      const response = await axios.post(`${this.newApiBaseUrl}/v1/chat/completions`, {
+        model,
+        messages,
+        temperature,
+        max_tokens: maxTokens,
+        stream: false
+      }, {
+        headers: {
+          'Authorization': `Bearer ${this.newApiKey}`,
+          'Content-Type': 'application/json'
+        }
+      })
+
+      return response.data.choices[0]?.message?.content || ''
+    } catch (error) {
+      console.error('新API调用失败，回退到原API:', error)
+      // 回退到原有实现
+      return null
+    }
   }
 
   /**
@@ -158,25 +190,34 @@ export class AiToolsService {
     return res
   }
 
-  // 智能评论
+  // 智能评论 - 重构为使用新API
   async reviewAi(
     title: string,
     desc = '无',
     max = 50,
   ): Promise<string> {
+    const messages = [
+      {
+        role: 'system',
+        content: `你是我的好友,请对我发的短视频作品或者朋友圈作品进行评论. 请用中文回复,并且回复内容不超过${max}字.只需要返回评论内容.`,
+      },
+      {
+        role: 'user',
+        content: `作品标题: ${title}, 作品描述: ${desc}`,
+      },
+    ]
+
+    // 尝试使用新API
+    const newApiResult = await this.newChatCompletion(messages)
+    if (newApiResult) {
+      return newApiResult
+    }
+
+    // 回退到原有实现
     const completion = await this.openai.chat.completions.create({
       stream: true,
       model: 'qwen-omni-turbo',
-      messages: [
-        {
-          role: 'system',
-          content: `你是我的好友,请对我发的短视频作品或者朋友圈作品进行评论. 请用中文回复,并且回复内容不超过${max}字.只需要返回评论内容.`,
-        },
-        {
-          role: 'user',
-          content: `作品标题: ${title}, 作品描述: ${desc}`,
-        },
-      ],
+      messages,
       stream_options: {
         include_usage: true,
       },
@@ -202,7 +243,7 @@ export class AiToolsService {
   }
 
   /**
-   * 智能回复评论
+   * 智能回复评论 - 重构为使用新API
    * @param content
    * @param title
    * @param desc
@@ -214,19 +255,28 @@ export class AiToolsService {
     desc = '无',
     max = 50,
   ): Promise<string> {
+    const messages = [
+      {
+        role: 'system',
+        content: `你是一个风趣幽默又有分寸的文字创作者的助手,请帮我对别人对我作品的评论进行回复. 请用中文回复,并且回复内容不超过${max}字.只需要返回你的回复内容.`,
+      },
+      {
+        role: 'user',
+        content: `作品标题: ${title}, 作品描述: ${desc}, 评论内容: ${content}`,
+      },
+    ]
+
+    // 尝试使用新API
+    const newApiResult = await this.newChatCompletion(messages)
+    if (newApiResult) {
+      return newApiResult
+    }
+
+    // 回退到原有实现
     const completion = await this.openai.chat.completions.create({
       stream: true,
       model: 'qwen-omni-turbo',
-      messages: [
-        {
-          role: 'system',
-          content: `你是一个风趣幽默又有分寸的文字创作者的助手,请帮我对别人对我作品的评论进行回复. 请用中文回复,并且回复内容不超过${max}字.只需要返回你的回复内容.`,
-        },
-        {
-          role: 'user',
-          content: `作品标题: ${title}, 作品描述: ${desc}, 评论内容: ${content}`,
-        },
-      ],
+      messages,
       stream_options: {
         include_usage: true,
       },
@@ -574,6 +624,134 @@ export class AiToolsService {
       imgList: result.data.data.images.map((item: any) => {
         return item.url
       }),
+    }
+  }
+
+  /**
+   * 新增：AI评论管理功能 - 支持自定义提示词和进度追踪
+   */
+  async aiCommentWithProgress(data: {
+    content: string
+    customPrompt?: string
+    title?: string
+    desc?: string
+    max?: number
+  }) {
+    const taskId = uuidv4().replace(/-/g, '')
+    
+    // 设置初始进度
+    await this.redisService.setKey(`aiCommentProgress:${taskId}`, {
+      status: 'processing',
+      progress: 0,
+      result: null,
+      error: null
+    }, 60 * 10)
+
+    // 异步处理
+    this.processAiComment(taskId, data).catch(console.error)
+
+    return taskId
+  }
+
+  private async processAiComment(taskId: string, data: {
+    content: string
+    customPrompt?: string
+    title?: string
+    desc?: string
+    max?: number
+  }) {
+    try {
+      // 更新进度
+      await this.updateProgress(taskId, 20, '准备生成评论...')
+
+      const { content, customPrompt, title = '无', desc = '无', max = 50 } = data
+      
+      const systemPrompt = customPrompt || 
+        `你是我的好友,请对我发的短视频作品或者朋友圈作品进行评论. 请用中文回复,并且回复内容不超过${max}字.只需要返回评论内容.`
+
+      const messages = [
+        {
+          role: 'system',
+          content: systemPrompt,
+        },
+        {
+          role: 'user',
+          content: `作品标题: ${title}, 作品描述: ${desc}, 内容: ${content}`,
+        },
+      ]
+
+      // 更新进度
+      await this.updateProgress(taskId, 50, '正在生成评论...')
+
+      // 尝试使用新API
+      let result = await this.newChatCompletion(messages)
+      
+      if (!result) {
+        // 回退到原有实现
+        await this.updateProgress(taskId, 70, '使用备用API生成...')
+        result = await this.fallbackAiComment(messages)
+      }
+
+      // 更新完成状态
+      await this.updateProgress(taskId, 100, '生成完成', result)
+
+    } catch (error) {
+      console.error('AI评论生成失败:', error)
+      await this.redisService.setKey(`aiCommentProgress:${taskId}`, {
+        status: 'error',
+        progress: 0,
+        result: null,
+        error: error.message || '生成失败'
+      }, 60 * 10)
+    }
+  }
+
+  private async updateProgress(taskId: string, progress: number, message: string, result?: string) {
+    await this.redisService.setKey(`aiCommentProgress:${taskId}`, {
+      status: progress === 100 ? 'completed' : 'processing',
+      progress,
+      message,
+      result: result || null,
+      error: null
+    }, 60 * 10)
+  }
+
+  private async fallbackAiComment(messages: any[]): Promise<string> {
+    const completion = await this.openai.chat.completions.create({
+      stream: true,
+      model: 'qwen-omni-turbo',
+      messages,
+      stream_options: {
+        include_usage: true,
+      },
+      modalities: ['text'],
+    })
+
+    let res = ''
+    for await (const chunk of completion) {
+      if (Array.isArray(chunk.choices) && chunk.choices.length > 0) {
+        const content = chunk.choices[0].delta.content
+        if (content === null) break
+        res += content
+      }
+    }
+    return res
+  }
+
+  // 获取AI评论进度
+  async getAiCommentProgress(taskId: string) {
+    try {
+      const progress = await this.redisService.get<{
+        status: string
+        progress: number
+        message?: string
+        result?: string
+        error?: string
+      }>(`aiCommentProgress:${taskId}`, false)
+      return progress || { status: 'not_found', progress: 0 }
+    } catch (error) {
+      console.log('------ getAiCommentProgress error ----', error)
+      return { status: 'error', progress: 0, error: 'Failed to get progress' }
     }
   }
 }
